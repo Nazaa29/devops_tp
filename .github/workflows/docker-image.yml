@@ -34,4 +34,10 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKER_USER }}/devops_tp:${{ github.sha }}
         labels: ${{ steps.meta.outputs.labels }}
-        
+    - name: Deploy to render
+      if: github.ref == 'refs/heads/main'
+      env: 
+        deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
+    
