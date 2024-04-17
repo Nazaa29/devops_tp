@@ -17,7 +17,7 @@ jobs:
     - name: Check put repo
       uses: actions/checkout@v3
     - name: Log in to Docker Hub
-      uses: dokcer/login-action@v2
+      uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKER_USER }}
         password: ${{ secrets.DOCKER_PASS }}
