@@ -8,11 +8,30 @@ on:
 
 jobs:
 
-  build:
-
+  push_to_docker_hub:
+    name: Pusk Docker image to Docker Hub
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Check put repo
+      uses: actions/checkout@v3
+    - name: Log in to Docker Hub
+      uses: dokcer/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASS }}
+    - name: Extract metadata (tags, labels) for Docker
+      id: meta
+      uses: dokcer/metadata-action@v4
+      with:
+        images: ${{ github.repository }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        file: Dockerfile
+        push: true
+        tags: ${{ secrets.DOCKER_USER }}/devops_tp:${{ github.sha }}
+        labels: ${{ steps.meta.outputs.labels }}
+        
