@@ -3,7 +3,7 @@ const http = require('http');
 const server = http.createServer((req, res) => {
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/plain');
-    res.end('Cucu te amo\n');
+    res.end('Tirate una linea pibe dale\n');
 });
 
 const port = 3000;
