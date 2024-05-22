@@ -4,7 +4,7 @@
   "description": "Proyecto de ejemplo para prácticas de DevOps",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
