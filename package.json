@@ -9,11 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^7.0.0"
+    "supertest": "^6.3.0"
   },
-  "dependencies": {
-    "express": "^4.19.2"
+  "jest": {
+    "testMatch": ["**/tests/**/*.test.js"]
   }
 }
