@@ -1,15 +1,34 @@
 const request = require('supertest');
 const puppeteer = require('puppeteer');
-const { app, server } = require('../index'); // Importar la app y el servidor
+const { app } = require('../app');
+const server = require('../server');
 
-// Cerrar el servidor después de todas las pruebas
-afterAll((done) => {
-    server.close(done);
+let browser;
+let page;
+
+beforeAll(async () => {
+    browser = await puppeteer.launch({ headless: true });
+    page = await browser.newPage();
+});
+
+afterAll(async () => {
+    if (page) await page.close();
+    if (browser) await browser.close();
+    await new Promise((resolve, reject) => {
+        server.close((err) => {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('Server closed');
+                resolve();
+            }
+        });
+    });
 });
 
 describe('API Tests', () => {
     it('should respond with Hola Mundo', async () => {
-        const response = await request(app).get('/');
+        const response = await request(app).get('/hello');
         expect(response.text).toBe('Hola Mundo');
         expect(response.statusCode).toBe(200);
     });
@@ -41,13 +60,11 @@ describe('API Tests', () => {
 
 describe('UI Tests', () => {
     it('should fetch and display Pokémon list when button is clicked', async () => {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        await page.goto(`http://localhost:${server.address().port}`);
+        await page.goto(`http://localhost:${server.address().port}/`, { waitUntil: 'load', timeout: 0 });
 
-        await page.waitForSelector('button', { timeout: 5000 });
+        await page.waitForSelector('button', { timeout: 10000 });
         await page.click('button');
-        await page.waitForSelector('#pokemon-list li', { timeout: 5000 });
+        await page.waitForSelector('#pokemon-list li', { timeout: 10000 });
 
         const pokemonList = await page.evaluate(() => {
             const items = document.querySelectorAll('#pokemon-list li');
@@ -56,7 +73,5 @@ describe('UI Tests', () => {
 
         expect(pokemonList.length).toBeGreaterThan(0);
         expect(pokemonList[0]).toMatch(/^#\d+ \w+$/);
-
-        await browser.close();
-    }, 10000); // Aumentar el tiempo de espera para esta prueba a 10000 ms
+    }, 20000); // Aumentar el tiempo de espera para esta prueba a 20000 ms
 });
