@@ -1,22 +1,15 @@
 const request = require('supertest');
 const puppeteer = require('puppeteer');
-const { app } = require('../index'); // Importar solo la app
+const { app, server } = require('../index'); // Importar la app y el servidor
 
-let server;
-
-beforeAll((done) => {
-    server = app.listen(0, done); // Escuchar en un puerto dinámico disponible
-});
-
+// Cerrar el servidor después de todas las pruebas
 afterAll((done) => {
-    server.close(() => {
-        done();
-    }); // Cerrar el servidor después de todas las pruebas
+    server.close(done);
 });
 
 describe('API Tests', () => {
     it('should respond with Hola Mundo', async () => {
-        const response = await request(app).get('/hello');
+        const response = await request(app).get('/');
         expect(response.text).toBe('Hola Mundo');
         expect(response.statusCode).toBe(200);
     });
@@ -50,11 +43,11 @@ describe('UI Tests', () => {
     it('should fetch and display Pokémon list when button is clicked', async () => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.goto(`http://localhost:${server.address().port}`, { waitUntil: 'load', timeout: 0 });
+        await page.goto(`http://localhost:${server.address().port}`);
 
-        await page.waitForSelector('button', { timeout: 10000 });
+        await page.waitForSelector('button', { timeout: 5000 });
         await page.click('button');
-        await page.waitForSelector('#pokemon-list li', { timeout: 10000 });
+        await page.waitForSelector('#pokemon-list li', { timeout: 5000 });
 
         const pokemonList = await page.evaluate(() => {
             const items = document.querySelectorAll('#pokemon-list li');
@@ -65,5 +58,5 @@ describe('UI Tests', () => {
         expect(pokemonList[0]).toMatch(/^#\d+ \w+$/);
 
         await browser.close();
-    }, 20000); // Aumentar el tiempo de espera para esta prueba a 20000 ms
+    }, 10000); // Aumentar el tiempo de espera para esta prueba a 10000 ms
 });
