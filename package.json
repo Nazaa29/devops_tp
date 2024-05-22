@@ -1,16 +1,21 @@
 {
   "name": "conejillo-de-indias",
   "version": "1.0.0",
-  "description": "",
+  "description": "Proyecto de ejemplo para prácticas de DevOps",
   "main": "index.js",
   "scripts": {
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tu-usuario/tu-repositorio.git"
+  },
   "keywords": [],
-  "author": "",
+  "author": "Tu Nombre",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "superagent": "^9.0.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",
