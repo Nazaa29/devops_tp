@@ -14,6 +14,7 @@
   "author": "Tu Nombre",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.2",
     "express": "^4.17.1",
     "superagent": "^9.0.0"
   },
@@ -22,6 +23,8 @@
     "supertest": "^6.3.0"
   },
   "jest": {
-    "testMatch": ["**/tests/**/*.test.js"]
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
   }
 }

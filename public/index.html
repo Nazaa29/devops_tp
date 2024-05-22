@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Fetcher</title>
+    <script>
+        async function fetchPokemons() {
+            try {
+                const response = await fetch('/pokemons');
+                const pokemons = await response.json();
+                const pokemonList = document.getElementById('pokemon-list');
+                pokemonList.innerHTML = '';
+                pokemons.forEach(pokemon => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `#${pokemon.number} ${pokemon.name}`;
+                    pokemonList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching Pokémon:', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Pokémon Fetcher</h1>
+    <button onclick="fetchPokemons()">Fetch Pokémons</button>
+    <ul id="pokemon-list"></ul>
+</body>
+</html>
