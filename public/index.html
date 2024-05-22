@@ -16,6 +16,7 @@
                     listItem.textContent = `#${pokemon.number} ${pokemon.name}`;
                     pokemonList.appendChild(listItem);
                 });
+                await fetch('/increment_click', { method: 'POST' });
             } catch (error) {
                 console.error('Error fetching Pokémon:', error);
             }
