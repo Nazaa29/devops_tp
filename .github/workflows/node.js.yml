@@ -28,7 +28,9 @@ jobs:
       run: npm cache clean --force
 
     - name: Install dependencies
-      run: npm ci
+      run: |
+        npm install
+        npm ci
 
     - name: Show npm log on error
       if: failure()
