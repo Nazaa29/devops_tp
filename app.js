@@ -22,13 +22,27 @@ const clickCounter = new promClient.Counter({
 });
 register.registerMetric(clickCounter);
 
+const helloCounter = new promClient.Counter({
+    name: 'hello_endpoint_count',
+    help: 'Count of accesses to /hello endpoint'
+});
+register.registerMetric(helloCounter);
+
+const sumCounter = new promClient.Counter({
+    name: 'sum_endpoint_count',
+    help: 'Count of accesses to /sum endpoint'
+});
+register.registerMetric(sumCounter);
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/hello', (req, res) => {
+    helloCounter.inc();
     res.send('Hola Mundo');
 });
 
 app.get('/sum', (req, res) => {
+    sumCounter.inc();
     const num1 = parseFloat(req.query.num1);
     const num2 = parseFloat(req.query.num2);
 

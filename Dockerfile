@@ -33,4 +33,4 @@ COPY . .
 EXPOSE 3001
 
 # Run the application.
-CMD node server.js
+CMD ["npm", "start"]
