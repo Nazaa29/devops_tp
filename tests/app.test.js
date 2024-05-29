@@ -73,5 +73,5 @@ describe('UI Tests', () => {
 
         expect(pokemonList.length).toBeGreaterThan(0);
         expect(pokemonList[0]).toMatch(/^#\d+ \w+$/);
-    }, 20000); // Aumentar el tiempo de espera para esta prueba a 20000 ms
+    }, 20000);
 });
