@@ -10,8 +10,6 @@ RUN npm ci --omit=dev
 
 COPY . .
 
-FROM node:${NODE_VERSION}-alpine
-
 ENV NODE_ENV production
 
 WORKDIR /app
