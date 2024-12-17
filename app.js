@@ -9,12 +9,12 @@ const app = express();
 const register = new promClient.Registry();
 promClient.collectDefaultMetrics({ register });
 
-const fetchDuration = new promClient.Histogram({
-    name: 'fetch_pokemon_duration_seconds',
-    help: 'Duration of Pokémon fetch requests in seconds',
-    buckets: [0.1, 0.5, 1, 2, 5]
+// Gauge para registrar la última duración del fetch (reemplaza el Histograma)
+const lastFetchDuration = new promClient.Gauge({
+    name: 'last_fetch_pokemon_duration_seconds',
+    help: 'Duration of the last Pokémon fetch request in seconds'
 });
-register.registerMetric(fetchDuration);
+register.registerMetric(lastFetchDuration);
 
 const clickCounter = new promClient.Counter({
     name: 'button_click_count',
@@ -55,7 +55,7 @@ app.get('/sum', (req, res) => {
 });
 
 app.get('/pokemons', async (req, res) => {
-    const end = fetchDuration.startTimer();
+    const startTime = process.hrtime();
     try {
         const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10');
         const pokemons = response.data.results.map((pokemon, index) => ({
@@ -66,7 +66,11 @@ app.get('/pokemons', async (req, res) => {
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch Pokémon data' });
     } finally {
-        end();
+        // Calculamos la duración en segundos
+        const diff = process.hrtime(startTime);
+        const duration = diff[0] + diff[1] / 1e9;
+        // Actualizamos el Gauge con la última duración
+        lastFetchDuration.set(duration);
     }
 });
 
