@@ -7,9 +7,13 @@ let browser;
 let page;
 
 beforeAll(async () => {
-    browser = await puppeteer.launch({ headless: true });
+    browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
     page = await browser.newPage();
 });
+
 
 afterAll(async () => {
     if (page) await page.close();
